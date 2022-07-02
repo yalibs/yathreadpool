@@ -21,13 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <iostream>
-#include <threadpool.h>
+#include "implementation/threadpool.h"
 
 int main(int argc, char** argv) {
     auto printA = []() { std::cout << "A"; };
     auto printB = []() { std::cout << "B"; };
     { // Place the threadpool in a scope if you dont want your tasks to overlap
-        threadpool my_pool{5};
+        ya::threadpool my_pool{5};
         // You can push one task at a time:
         my_pool.push_task(printA);
         my_pool.push_task(printB);
@@ -36,9 +36,9 @@ int main(int argc, char** argv) {
     }
     std::cout << std::endl;
     {
-        threadpool my_pool{5};
+        ya::threadpool my_pool{5};
         // Or you can push many tasks at once:
-        std::vector<threadpool::task_t> my_tasks{};
+        std::vector<ya::threadpool::task_t> my_tasks{};
         my_tasks.emplace_back(printA);
         my_tasks.emplace_back(printB);
         my_tasks.emplace_back(printA);
