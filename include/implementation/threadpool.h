@@ -52,12 +52,28 @@ namespace ya {
             tasks.push(t);
             task_q.notify_all();
         }
+
         void push_many(const std::vector<task_t> &v_tasks) {
             std::lock_guard<std::mutex> lock{task_lock};
             for (auto &t: v_tasks) {
                 tasks.push(t);
             }
             task_q.notify_all();
+        }
+
+        auto size() -> size_t {
+            return tasks.size();
+        }
+
+        auto empty() -> bool {
+            return size() <= 0;
+        }
+
+        void wait_for_next_task() {
+            if(empty())
+                return;
+            std::unique_lock<std::mutex> a(task_lock);
+            task_q.wait(a);
         }
 
     private:
